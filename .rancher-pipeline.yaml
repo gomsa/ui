@@ -4,9 +4,6 @@ stages:
   - runScriptConfig:
       image: node
       shellScript: |-
-            mkdir /app
-            ln -s `pwd` /app
-            cd /app
             npm install --registry=https://registry.npm.taobao.org
             npm run build:prod
 - name: Publish
