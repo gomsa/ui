@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ui-ingress
-  namespace: srv
+  namespace: api
 spec:
   rules:
   - host: xip.io
