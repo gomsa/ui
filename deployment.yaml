@@ -1,7 +1,22 @@
+# 负载均衡
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ui-ingress
+  namespace: srv
+spec:
+  rules:
+  - host: xip.io
+    http:
+      paths:
+        - backend:
+            serviceName: ui-service
+            servicePort: http
+---
 kind: Service
 apiVersion: v1
 metadata:
-  name: ui
+  name: ui-service
   namespace: api
 spec:
   selector:
