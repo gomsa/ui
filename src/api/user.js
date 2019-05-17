@@ -2,9 +2,12 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/user/login',
     method: 'post',
-    data
+    data: {
+      'service': 'user-api',
+      'method': 'Auth.Auth',
+      'request': data
+    }
   })
 }
 
