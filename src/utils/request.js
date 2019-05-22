@@ -73,9 +73,11 @@ service.interceptors.response.use(
     // }
   },
   error => {
-    console.log('err' + error) // for debug
+    // console.log(error.response.data.detail) // for debug
+    // console.log('err' + error) // for debug
+    const detail = error.response.data.detail.slice(22)
     Message({
-      message: error.message,
+      message: detail,
       type: 'error',
       duration: 5 * 1000
     })

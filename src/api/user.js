@@ -1,30 +1,54 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function List(data) {
   return request({
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Auth.Auth',
+      'method': 'Users.List',
       'request': data
     }
   })
 }
 
-export function getInfo() {
+export function Get(data) {
   return request({
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Info',
-      'request': {}
+      'method': 'Users.Get',
+      'request': data
     }
   })
 }
 
-export function logout() {
+export function Create(data) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    method: 'post',
+    data: {
+      'service': 'user-api',
+      'method': 'Users.Create',
+      'request': data
+    }
+  })
+}
+export function Update(data) {
+  return request({
+    method: 'post',
+    data: {
+      'service': 'user-api',
+      'method': 'Users.Update',
+      'request': data
+    }
+  })
+}
+export function Delete(data) {
+  return request({
+    method: 'post',
+    data: {
+      'service': 'user-api',
+      'method': 'Users.Delete',
+      'request': data
+    }
   })
 }
