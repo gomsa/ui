@@ -23,7 +23,7 @@ spec:
     app: micro
   type: ClusterIP
   ports:
-    - name: microHttp
+    - name: micro-http
       port: 8080
       protocol: TCP
       targetPort: 8080
@@ -59,7 +59,7 @@ spec:
             value: 0.0.0.0:8989
           ports:
           - containerPort: 8080
-            name: microHttp
+            name: micro-http
             protocol: TCP
         - name: health
           command: [

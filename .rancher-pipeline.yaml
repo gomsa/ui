@@ -12,7 +12,7 @@ stages:
       dockerfilePath: ./Dockerfile
       buildContext: .
       tag: ui:${CICD_EXECUTION_SEQUENCE}
-- name: Deploy
+- name: MicroDeploy
   steps:
   - applyYamlConfig:
       path: ./deployment-micro.yaml
