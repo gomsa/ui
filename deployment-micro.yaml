@@ -1,0 +1,79 @@
+# 负载均衡
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: micro-ingress
+#   namespace: api
+# spec:
+#   rules:
+#   - host: xip.io
+#     http:
+#       paths:
+#         - backend:
+#             serviceName: micro
+#             servicePort: microHttp
+# ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro
+  namespace: api
+spec:
+  selector:
+    app: micro
+  type: ClusterIP
+  ports:
+    - name: microHttp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro
+  namespace: api
+  labels:
+    app: micro
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: micro
+  template:
+    metadata:
+      labels:
+        app: micro
+    spec:
+      containers:
+        - name: micro
+          image: microhq/micro:kubernetes
+          args:
+            - "api"
+            - "--handler=rpc"
+            - "--address=0.0.0.0:8080"
+          env:
+          - name: MICRO_SERVER_NAME
+            value: micro
+          - name: MICRO_SERVER_ADDRESS
+            value: 0.0.0.0:8989
+          ports:
+          - containerPort: 8080
+            name: microHttp
+            protocol: TCP
+        - name: health
+          command: [
+            "/health",
+            "--health_address=0.0.0.0:8081",
+            "--server_name=micro",
+            "--server_address=0.0.0.0:8989"
+	        ]
+          image: microhq/health:kubernetes
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+
+

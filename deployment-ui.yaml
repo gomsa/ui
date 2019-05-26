@@ -12,6 +12,10 @@ spec:
         - backend:
             serviceName: ui-service
             servicePort: http
+        - backend:
+            serviceName: micro
+            servicePort: microHttp
+          path: /rpc
 ---
 kind: Service
 apiVersion: v1
@@ -55,3 +59,13 @@ spec:
         - containerPort: 80
           name: http
           protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1

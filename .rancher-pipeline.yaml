@@ -15,4 +15,8 @@ stages:
 - name: Deploy
   steps:
   - applyYamlConfig:
-      path: ./deployment.yaml
+      path: ./deployment-micro.yaml
+- name: UiDeploy
+  steps:
+  - applyYamlConfig:
+      path: ./deployment-ui.yaml
