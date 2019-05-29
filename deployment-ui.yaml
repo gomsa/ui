@@ -14,7 +14,7 @@ spec:
             servicePort: http
         - backend:
             serviceName: micro
-            servicePort: microHttp
+            servicePort: micro-http
           path: /rpc
 ---
 kind: Service
