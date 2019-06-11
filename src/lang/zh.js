@@ -3,7 +3,9 @@ export default {
     dashboard: '首页',
 
     User: '用户',
-    listUser: '用户列表',
+    UserList: '用户列表',
+    UserRole: '用户角色',
+    UserPermission: '用户权限',
 
     documentation: '文档',
     guide: '引导页',
@@ -175,5 +177,52 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
+  },
+
+  user: {
+    create: '添加',
+    id: '用户ID',
+    name: '别名',
+    avatar: '头像',
+    username: '账户',
+    password: '密码',
+    checkPassword: '确认密码',
+    mobile: '手机',
+    email: '邮箱',
+    roles: '角色',
+    created_at: '创建时间',
+    actions: '操作',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取消',
+    confirm: '确定'
+  },
+  userRole: {
+    create: '添加',
+    id: '角色ID',
+    name: '角色标识',
+    display_name: '角色名称',
+    description: '角色描述',
+    created_at: '创建时间',
+    actions: '操作',
+    permission: '权限',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取消',
+    confirm: '确定'
+  },
+  userPermission: {
+    create: '添加',
+    id: '权限ID',
+    service: '微服务',
+    method: '方法',
+    display_name: '权限名称',
+    description: '权限描述',
+    created_at: '创建时间',
+    actions: '操作',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取消',
+    confirm: '确定'
   }
 }

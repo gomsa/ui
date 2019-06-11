@@ -38,7 +38,7 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://localhost:${port}/mock`,
-        target: `http://micro-ingress.api.192.168.1.31.xip.io/rpc`,
+        target: `http://gomsa.binzhou.vip/rpc`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const userRouter = {
   path: '/user',
   component: Layout,
-  redirect: '/user/list-user',
+  redirect: '/user/user-list',
   name: 'User',
   meta: {
     title: 'User',
@@ -13,28 +13,22 @@ const userRouter = {
   },
   children: [
     {
-      path: 'dynamic-user',
-      component: () => import('@/views/user/dynamic-user/index'),
-      name: 'DynamicUser',
-      meta: { title: 'dynamicUser' }
+      path: 'user-list',
+      component: () => import('@/views/user/list'),
+      name: 'UserList',
+      meta: { title: 'UserList' }
     },
     {
-      path: 'drag-user',
-      component: () => import('@/views/user/drag-user'),
-      name: 'DragUser',
-      meta: { title: 'dragUser' }
+      path: 'user-role',
+      component: () => import('@/views/user/role'),
+      name: 'UserRole',
+      meta: { title: 'UserRole' }
     },
     {
-      path: 'inline-edit-user',
-      component: () => import('@/views/user/inline-edit-user'),
-      name: 'InlineEditUser',
-      meta: { title: 'inlineEditUser' }
-    },
-    {
-      path: 'list-user',
-      component: () => import('@/views/user/list-user'),
-      name: 'ListUser',
-      meta: { title: 'listUser' }
+      path: 'user-permission',
+      component: () => import('@/views/user/permission'),
+      name: 'UserPermission',
+      meta: { title: 'UserPermission' }
     }
   ]
 }

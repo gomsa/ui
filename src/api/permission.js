@@ -5,8 +5,19 @@ export function Exist(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Exist',
+      'method': 'Permissions.Exist',
       'request': data
+    }
+  })
+}
+
+export function All() {
+  return request({
+    method: 'post',
+    data: {
+      'service': 'user-api',
+      'method': 'Permissions.All',
+      'request': {}
     }
   })
 }
@@ -16,7 +27,7 @@ export function List(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.List',
+      'method': 'Permissions.List',
       'request': data
     }
   })
@@ -27,7 +38,7 @@ export function Get(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Get',
+      'method': 'Permissions.Get',
       'request': data
     }
   })
@@ -38,7 +49,7 @@ export function Create(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Create',
+      'method': 'Permissions.Create',
       'request': data
     }
   })
@@ -48,7 +59,7 @@ export function Update(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Update',
+      'method': 'Permissions.Update',
       'request': data
     }
   })
@@ -58,7 +69,7 @@ export function Delete(data) {
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Users.Delete',
+      'method': 'Permissions.Delete',
       'request': data
     }
   })
