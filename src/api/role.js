@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
-export function Exist(data) {
+export function All() {
   return request({
     method: 'post',
     data: {
       'service': 'user-api',
-      'method': 'Roles.Exist',
-      'request': data
+      'method': 'Roles.All',
+      'request': {}
     }
   })
 }

@@ -20,14 +20,14 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('userRole.label')" prop="label" align="center" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.label }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('userRole.name')" prop="name" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userRole.display_name')" prop="display_name" align="center" width="150">
-        <template slot-scope="scope">
-          <span>{{ scope.row.display_name }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userRole.description')" prop="description" align="center" min-width="230">
@@ -59,11 +59,11 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="$t('userRole.label')" prop="label">
+          <el-input v-model="formData.label" />
+        </el-form-item>
         <el-form-item :label="$t('userRole.name')" prop="name">
           <el-input v-model="formData.name" />
-        </el-form-item>
-        <el-form-item :label="$t('userRole.display_name')" prop="display_name">
-          <el-input v-model="formData.display_name" />
         </el-form-item>
         <el-form-item :label="$t('userRole.description')" prop="description">
           <el-input v-model="formData.description" />
@@ -78,18 +78,45 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="权限管理" :visible.sync="dialogPermissionVisible">
+      <el-form ref="form" label-width="80px">
+        <el-form-item
+          v-for="(item,key) in permissions"
+          :key="key"
+          :label="key"
+        >
+          <checkbox-indeterminate
+            v-if="dialogPermissionVisible"
+            v-model="checkedPermissions"
+            :options="item"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPermissionVisible = false">
+          {{ $t('userRole.cancel') }}
+        </el-button>
+        <el-button :disabled="dialogDisabled" type="primary" @click="updateRolePermissions()">
+          {{ $t('userRole.confirm') }}
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { List, Create, Delete, Update } from '@/api/role'
 import { All } from '@/api/permission'
+import { GetPermissions, UpdatePermissions } from '@/api/role-permission'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
+
+import CheckboxIndeterminate from '@/components/CheckboxIndeterminate'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 export default {
   name: 'RoleList',
   components: {
+    CheckboxIndeterminate,
     Pagination
   },
   directives: { waves },
@@ -98,6 +125,10 @@ export default {
     return {
       // 权限列表
       permissions: {},
+      checkedPermissions: [],
+      roleLabel: '', // 当前角色 label
+      // 弹窗控制
+      dialogPermissionVisible: false,
       // list 列表
       tableKey: 0,
       list: null,
@@ -108,7 +139,6 @@ export default {
         limit: 20,
         sort: 'created_at desc'
       },
-      // 弹窗控制
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -119,24 +149,24 @@ export default {
       dialogDisabled: false, // 创建权限和更新权限按钮提示后禁用
       formData: {
         id: 0,
+        label: '',
         name: '',
-        display_name: '',
         description: ''
       },
       rules: {
-        name: [
+        label: [
           { required: true, message: '请输入角色标识', trigger: 'blur' },
-          { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
+          { min: 2, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ],
-        display_name: [
+        name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
+          { min: 2, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ]
       }
     }
   },
   created() {
-    console.log(parseTime)
+    console.log(parseTime(new Date()))
     this.getPermissions()
     this.getList()
   },
@@ -145,23 +175,29 @@ export default {
     initFormData() {
       this.formData = {
         id: 0,
+        label: '',
         name: '',
-        display_name: '',
         description: ''
       }
     },
     getPermissions() {
       All().then(response => {
         const data = response.data.permissions
+        // 分组 permission 赋值 key name
         for (const key in data) {
-          if (this.permissions[data[key].service]) {
+          if (!this.permissions[data[key].service]) {
             this.permissions[data[key].service] = []
-            this.permissions[data[key].service].push(data[key])
+            this.permissions[data[key].service].push({
+              label: data[key].service + '|' + data[key].method,
+              name: data[key].name
+            })
           } else {
-            this.permissions[data[key].service].push(data[key])
+            this.permissions[data[key].service].push({
+              label: data[key].service + '|' + data[key].method,
+              name: data[key].name
+            })
           }
         }
-        console.log(this.permissions)
       })
     },
     sortChange(data) {
@@ -173,12 +209,58 @@ export default {
     getList() {
       this.listLoading = true
       List(this.listQuery).then(response => {
-        this.list = response.data.roles
-        this.total = response.data.total
+        if (response.data.roles) {
+          this.list = response.data.roles
+          this.total = response.data.total
+        }
 
         // Just to simulate the time of the request
         this.listLoading = false
       })
+    },
+    // 获取角色权限
+    getRolePermission(row) {
+      GetPermissions({ role: row.label }).then(response => {
+        const perms = response.data.permissions
+        if (perms) {
+          for (const key in perms) {
+            this.checkedPermissions.push(perms[key].service + '|' + perms[key].method)
+          }
+        }
+      })
+    },
+    // 更新角色权限
+    updateRolePermissions() {
+      const checked = this.checkedPermissions
+      const perms = []
+      for (const key in checked) {
+        const c = checked[key].split('|')
+        perms.push({
+          service: c[0],
+          method: c[1]
+        })
+      }
+      this.dialogDisabled = true
+      UpdatePermissions({
+        role: this.roleLabel,
+        permissions: perms
+      }).then(response => {
+        if (response.data.valid) {
+          this.dialogPermissionVisible = false
+          this.$message({
+            type: 'success',
+            message: '角色权限更新成功!'
+          })
+        }
+      })
+    },
+    handleRermission(row) {
+      this.dialogPermissionVisible = true
+      this.dialogDisabled = false
+      // 初始化权限列表防止冲突
+      this.checkedPermissions = []
+      this.getRolePermission(row)
+      this.roleLabel = row.label
     },
     handleCreate() {
       this.dialogStatus = 'create'
@@ -186,17 +268,14 @@ export default {
       this.dialogDisabled = false
       this.initFormData()
     },
-    handleRermission(row) {
-      console.log(row)
-    },
     handleUpdate(row) {
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.dialogDisabled = false
       this.formData = {
         id: row.id,
+        label: row.label,
         name: row.name,
-        display_name: row.display_name,
         description: row.description
       }
     },

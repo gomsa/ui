@@ -1,16 +1,5 @@
 import request from '@/utils/request'
 
-export function Exist(data) {
-  return request({
-    method: 'post',
-    data: {
-      'service': 'user-api',
-      'method': 'Permissions.Exist',
-      'request': data
-    }
-  })
-}
-
 export function All() {
   return request({
     method: 'post',

@@ -54,10 +54,13 @@
       </el-table-column>
       <el-table-column :label="$t('user.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
+          <el-button size="mini" type="warning" @click="handleRole(row)">
+            {{ $t('user.role') }}
+          </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('user.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDeleted(row,)">
+          <el-button size="mini" type="danger" @click="handleDeleted(row)">
             {{ $t('user.delete') }}
           </el-button>
         </template>
@@ -88,9 +91,6 @@
         </el-form-item>
         <!-- <el-form-item :label="$t('user.avatar')">
           <el-input v-model="formData.avatar" />
-        </el-form-item>
-        <el-form-item :label="$t('user.roles')">
-          <el-input v-model="formData.roles" />
         </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -102,25 +102,51 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="角色管理" :visible.sync="dialogRoleVisible">
+      <el-form ref="form" label-width="80px">
+        <checkbox-indeterminate
+          v-if="dialogRoleVisible"
+          v-model="checkedRoles"
+          :options="roles"
+        />
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRoleVisible = false">
+          {{ $t('user.cancel') }}
+        </el-button>
+        <el-button :disabled="dialogDisabled" type="primary" @click="updateUserRoles()">
+          {{ $t('user.confirm') }}
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { All } from '@/api/role'
+import { GetRoles, UpdateRoles } from '@/api/user-role'
 import { Exist, List, Create, Delete, Update } from '@/api/user'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import DialogPicture from '@/components/DialogPicture'
+import CheckboxIndeterminate from '@/components/CheckboxIndeterminate'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 export default {
   name: 'UserList',
   components: {
     DialogPicture,
+    CheckboxIndeterminate,
     Pagination
   },
   directives: { waves },
   props: {},
   data() {
     return {
+      // 角色管理
+      roles: {},
+      checkedRoles: [],
+      dialogRoleVisible: false,
+      userID: '', // 当前选择用户id
       // list 列表
       tableKey: 0,
       list: null,
@@ -147,8 +173,7 @@ export default {
         mobile: '',
         email: '',
         name: '',
-        avatar: '',
-        roles: ''
+        avatar: ''
       },
       // 缓存 update 数据
       updateFormData: {
@@ -158,8 +183,7 @@ export default {
         mobile: '',
         email: '',
         name: '',
-        avatar: '',
-        roles: ''
+        avatar: ''
       },
       rules: {
         username: [
@@ -251,7 +275,8 @@ export default {
     }
   },
   created() {
-    console.log(parseTime)
+    console.log(parseTime(new Date()))
+    this.getRoles()
     this.getList()
   },
   mounted() {},
@@ -264,8 +289,7 @@ export default {
         mobile: '',
         email: '',
         name: '',
-        avatar: '',
-        roles: ''
+        avatar: ''
       }
       this.updateFormData = {
         id: '',
@@ -274,8 +298,7 @@ export default {
         mobile: '',
         email: '',
         name: '',
-        avatar: '',
-        roles: ''
+        avatar: ''
       }
     },
     sortChange(data) {
@@ -294,6 +317,44 @@ export default {
         this.listLoading = false
       })
     },
+    getRoles() {
+      All().then(response => {
+        this.roles = response.data.roles
+      })
+    },
+    // 获取用户角色
+    getUserRoles(row) {
+      GetRoles({ userID: row.id }).then(response => {
+        const roles = response.data.roles
+        if (roles) {
+          this.checkedRoles = roles
+        }
+      })
+    },
+    // 更新用户角色
+    updateUserRoles() {
+      this.dialogDisabled = true
+      UpdateRoles({
+        userID: this.userID,
+        roles: this.checkedRoles
+      }).then(response => {
+        if (response.data.valid) {
+          this.dialogRoleVisible = false
+          this.$message({
+            type: 'success',
+            message: '用户角色更新成功!'
+          })
+        }
+      })
+    },
+    handleRole(row) {
+      this.dialogRoleVisible = true
+      this.dialogDisabled = false
+      // 初始化权限列表防止冲突
+      this.checkedRoles = []
+      this.getUserRoles(row)
+      this.userID = row.id
+    },
     handleCreate() {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -310,8 +371,7 @@ export default {
         mobile: row.mobile,
         email: row.email,
         name: row.name,
-        avatar: row.avatar,
-        roles: row.roles
+        avatar: row.avatar
       }
       this.updateFormData = {
         id: row.id,
@@ -319,8 +379,7 @@ export default {
         mobile: row.mobile,
         email: row.email,
         name: row.name,
-        avatar: row.avatar,
-        roles: row.roles
+        avatar: row.avatar
       }
     },
     handleDeleted(row) {

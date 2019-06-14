@@ -21,14 +21,14 @@
           <span>{{ scope.row.service }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userPermission.method')" prop="method" align="center" width="150">
+      <el-table-column :label="$t('userPermission.method')" prop="method" align="center" width="275">
         <template slot-scope="scope">
           <span>{{ scope.row.method }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userPermission.display_name')" prop="display_name" align="center" width="150">
+      <el-table-column :label="$t('userPermission.name')" prop="name" align="center" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.display_name }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userPermission.description')" prop="description" align="center" min-width="230">
@@ -60,8 +60,8 @@
         <el-form-item :label="$t('userPermission.method')" prop="method">
           <el-input v-model="formData.method" />
         </el-form-item>
-        <el-form-item :label="$t('userPermission.display_name')" prop="display_name">
-          <el-input v-model="formData.display_name" />
+        <el-form-item :label="$t('userPermission.name')" prop="name">
+          <el-input v-model="formData.name" />
         </el-form-item>
         <el-form-item :label="$t('userPermission.description')" prop="description">
           <el-input v-model="formData.description" />
@@ -101,7 +101,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 100,
-        sort: 'created_at desc'
+        sort: 'created_at asc'
       },
       // 弹窗控制
       dialogFormVisible: false,
@@ -116,7 +116,7 @@ export default {
         id: 0,
         service: '',
         method: '',
-        display_name: '',
+        name: '',
         description: ''
       },
       rules: {
@@ -128,7 +128,7 @@ export default {
           { required: true, message: '请输入权限方法', trigger: 'blur' },
           { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
         ],
-        display_name: [
+        name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
           { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
         ]
@@ -136,7 +136,7 @@ export default {
     }
   },
   created() {
-    console.log(parseTime)
+    console.log(parseTime(new Date()))
     this.getList()
   },
   mounted() {},
@@ -146,7 +146,7 @@ export default {
         id: 0,
         service: '',
         method: '',
-        display_name: '',
+        name: '',
         description: ''
       }
     },
@@ -180,7 +180,7 @@ export default {
     //     id: row.id,
     //     service: row.service,
     //     method: row.method,
-    //     display_name: row.display_name,
+    //     name: row.name,
     //     description: row.description
     //   }
     // },
