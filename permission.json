@@ -1,0 +1,13 @@
+[
+  {"app": "ui","service": "user","method": "list",      "name": "用户列表","description": "查看所有用户",   "permission": ["user-api,Users.List"]},
+  {"app": "ui","service": "user","method": "add",       "name": "添加用户","description": "后台添加用户",   "permission": ["user-api,Users.Exist","user-api,Users.Create"]},
+  {"app": "ui","service": "user","method": "update",    "name": "更新用户","description": "后台更新用户",   "permission": ["user-api,Users.Get","user-api,Users.Update"]},
+  {"app": "ui","service": "user","method": "delete",    "name": "删除用户","description": "后台删除用户",   "permission": ["user-api,Users.Delete"]},
+  {"app": "ui","service": "user","method": "roles",     "name": "用户角色","description": "管理用户角色",   "permission": ["user-api,Roles.All","user-api,Casbin.GetRoles","user-api,Casbin.UpdateRoles"]},
+
+  {"app": "ui","service": "role","method": "list",      "name": "角色列表","description": "查看所有角色",   "permission": [ "user-api,Roles.List"]},
+  {"app": "ui","service": "role","method": "add",       "name": "添加角色","description": "后台添加角色",   "permission": [ "user-api,Roles.Exist","user-api,Roles.Create"]},
+  {"app": "ui","service": "role","method": "update",    "name": "更新角色","description": "后台更新角色",   "permission": [ "user-api,Roles.Get","user-api,Roles.Update"]},
+  {"app": "ui","service": "role","method": "delete",    "name": "删除角色","description": "后台删除角色",   "permission": [ "user-api,Roles.Delete"]},
+  {"app": "ui","service": "role","method": "permission","name": "角色权限","description": "管理角色权限",   "permission": [ "user-api,Permissions.All","user-api,Casbin.GetPermissions", "user-api,Casbin.UpdatePermissions"]}
+]

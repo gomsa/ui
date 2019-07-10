@@ -36,6 +36,9 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
+          <el-dropdown-item v-if="checkRole(['root'])" divided>
+            <span style="display:block;" @click="syncFrontPermits">{{ $t('navbar.frontPermits') }}</span>
+          </el-dropdown-item>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
@@ -46,6 +49,8 @@
 </template>
 
 <script>
+import { checkRole } from '@/utils/permission' // 权限判断函数
+import { UpdateOrCreate } from '@/api/front-permit' // 权限判断函数
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
@@ -73,8 +78,21 @@ export default {
     ])
   },
   methods: {
+    checkRole,
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    syncFrontPermits() {
+      UpdateOrCreate({ app: 'ui', service: 'role', method: 'permission', name: '角色权限', description: '管理角色权限', permissions: [{ service: 'user-api', method: 'Permissions.All' }, { service: 'user-api', method: 'Casbin.GetPermissions' }, { service: 'user-api', method: 'Casbin.UpdatePermissions' }] }).then(response => {
+        const data = response.data
+        if (data.valid) {
+          this.$message({
+            type: 'success',
+            message: '角色权限同步成功!'
+          })
+        }
+      })
+      console.log('123')
     },
     async logout() {
       await this.$store.dispatch('user/logout')

@@ -13,22 +13,28 @@ const userRouter = {
   },
   children: [
     {
-      path: 'user-list',
+      path: 'user/list',
       component: () => import('@/views/user/list'),
       name: 'UserList',
       meta: { title: 'UserList' }
     },
     {
-      path: 'user-role',
+      path: 'user/role',
       component: () => import('@/views/user/role'),
       name: 'UserRole',
       meta: { title: 'UserRole' }
     },
     {
-      path: 'user-permission',
-      component: () => import('@/views/user/permission'),
-      name: 'UserPermission',
-      meta: { title: 'UserPermission' }
+      path: 'user/permission/front',
+      component: () => import('@/views/user/permission/front'),
+      name: 'FrontPermission',
+      meta: { title: 'FrontPermission' }
+    },
+    {
+      path: 'user/permission/micro',
+      component: () => import('@/views/user/permission/micro'),
+      name: 'MicroPermission',
+      meta: { title: 'MicroPermission' }
     }
   ]
 }

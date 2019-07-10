@@ -124,7 +124,7 @@
 
 <script>
 import { All } from '@/api/role'
-import { GetRoles, UpdateRoles } from '@/api/user-role'
+import { GetRoles, UpdateRoles } from '@/api/casbin'
 import { Exist, List, Create, Delete, Update } from '@/api/user'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'

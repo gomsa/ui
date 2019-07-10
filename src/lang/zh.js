@@ -5,7 +5,8 @@ export default {
     User: '用户',
     UserList: '用户列表',
     UserRole: '用户角色',
-    UserPermission: '用户权限',
+    MicroPermission: '微服务权限',
+    FrontPermission: '前端权限',
 
     documentation: '文档',
     guide: '引导页',
@@ -74,6 +75,7 @@ export default {
     dashboard: '首页',
     github: '项目地址',
     logOut: '退出登录',
+    frontPermits: '权限同步',
     profile: '个人中心',
     theme: '换肤',
     size: '布局大小'
@@ -212,7 +214,7 @@ export default {
     cancel: '取消',
     confirm: '确定'
   },
-  userPermission: {
+  microPermission: {
     create: '添加',
     id: '权限ID',
     service: '微服务',

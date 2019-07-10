@@ -107,7 +107,7 @@
 <script>
 import { List, Create, Delete, Update } from '@/api/role'
 import { All } from '@/api/permission'
-import { GetPermissions, UpdatePermissions } from '@/api/role-permission'
+import { GetPermissions, UpdatePermissions } from '@/api/casbin'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 
