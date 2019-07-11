@@ -40,9 +40,12 @@
           <span>{{ scope.row.created_at | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userRole.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('userRole.actions')" align="center" width="350" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button size="mini" type="warning" @click="handleRermission(row)">
+          <el-button type="success" size="mini" @click="handleFrontPermit(row)">
+            {{ $t('userRole.front_permit') }}
+          </el-button>
+          <el-button type="warning" size="mini" @click="handlePermission(row)">
             {{ $t('userRole.permission') }}
           </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -78,8 +81,31 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="权限管理" :visible.sync="dialogPermissionVisible">
-      <el-form ref="form" label-width="80px">
+    <el-dialog title="前端权限管理" :visible.sync="dialogFrontPermitVisible">
+      <el-form ref="form" label-width="120px">
+        <el-form-item
+          v-for="(item,key) in front_permits"
+          :key="key"
+          :label="key"
+        >
+          <checkbox-indeterminate
+            v-if="dialogFrontPermitVisible"
+            v-model="checkedPermissions"
+            :options="item"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFrontPermitVisible = false">
+          {{ $t('userRole.cancel') }}
+        </el-button>
+        <el-button :disabled="dialogDisabled" type="primary" @click="updateRolePermissions()">
+          {{ $t('userRole.confirm') }}
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="权限管理[API]" :visible.sync="dialogPermissionVisible">
+      <el-form ref="form" label-width="120px">
         <el-form-item
           v-for="(item,key) in permissions"
           :key="key"
@@ -106,7 +132,8 @@
 
 <script>
 import { List, Create, Delete, Update } from '@/api/role'
-import { All } from '@/api/permission'
+import { All as PermissionAll } from '@/api/permission'
+import { All as FrontPermitAll } from '@/api/front-permit'
 import { GetPermissions, UpdatePermissions } from '@/api/casbin'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -124,10 +151,12 @@ export default {
   data() {
     return {
       // 权限列表
+      front_permits: {},
       permissions: {},
       checkedPermissions: [],
       roleLabel: '', // 当前角色 label
       // 弹窗控制
+      dialogFrontPermitVisible: false,
       dialogPermissionVisible: false,
       // list 列表
       tableKey: 0,
@@ -167,6 +196,7 @@ export default {
   },
   created() {
     console.log(parseTime(new Date()))
+    this.getFrontPermit()
     this.getPermissions()
     this.getList()
   },
@@ -180,8 +210,29 @@ export default {
         description: ''
       }
     },
+    getFrontPermit() {
+      FrontPermitAll().then(response => {
+        const data = response.data.frontPermits
+        // 分组 permission 赋值 key name
+        for (const key in data) {
+          const k = data[key].app + '_' + data[key].service
+          if (!this.front_permits[k]) {
+            this.front_permits[k] = []
+            this.front_permits[k].push({
+              label: data[key].app + '_' + data[key].service + '_' + data[key].method + '|',
+              name: data[key].name
+            })
+          } else {
+            this.front_permits[k].push({
+              label: data[key].app + '_' + data[key].service + '_' + data[key].method + '|',
+              name: data[key].name
+            })
+          }
+        }
+      })
+    },
     getPermissions() {
-      All().then(response => {
+      PermissionAll().then(response => {
         const data = response.data.permissions
         // 分组 permission 赋值 key name
         for (const key in data) {
@@ -224,10 +275,22 @@ export default {
         const perms = response.data.permissions
         if (perms) {
           for (const key in perms) {
+            if (perms[key].method === undefined) {
+              perms[key].method = ''
+            }
             this.checkedPermissions.push(perms[key].service + '|' + perms[key].method)
           }
         }
       })
+    },
+    // 处理前端权限
+    handleFrontPermit(row) {
+      this.dialogFrontPermitVisible = true
+      this.dialogDisabled = false
+      // 初始化权限列表防止冲突
+      this.checkedPermissions = []
+      this.getRolePermission(row)
+      this.roleLabel = row.label
     },
     // 更新角色权限
     updateRolePermissions() {
@@ -235,9 +298,17 @@ export default {
       const perms = []
       for (const key in checked) {
         const c = checked[key].split('|')
+        let service = ''
+        let method = ''
+        if (c[0] !== undefined) {
+          service = c[0]
+        }
+        if (c[1] !== undefined) {
+          method = c[1]
+        }
         perms.push({
-          service: c[0],
-          method: c[1]
+          service: service,
+          method: method
         })
       }
       this.dialogDisabled = true
@@ -246,6 +317,7 @@ export default {
         permissions: perms
       }).then(response => {
         if (response.data.valid) {
+          this.dialogFrontPermitVisible = false
           this.dialogPermissionVisible = false
           this.$message({
             type: 'success',
@@ -254,7 +326,7 @@ export default {
         }
       })
     },
-    handleRermission(row) {
+    handlePermission(row) {
       this.dialogPermissionVisible = true
       this.dialogDisabled = false
       // 初始化权限列表防止冲突
@@ -348,4 +420,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-button--mini{
+  width: auto;
+}
 </style>

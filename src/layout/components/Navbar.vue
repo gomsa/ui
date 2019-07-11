@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import permissions from '@/permissions'
 import { checkRole } from '@/utils/permission' // 权限判断函数
 import { UpdateOrCreate } from '@/api/front-permit' // 权限判断函数
 import { mapGetters } from 'vuex'
@@ -83,16 +84,22 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     syncFrontPermits() {
-      UpdateOrCreate({ app: 'ui', service: 'role', method: 'permission', name: '角色权限', description: '管理角色权限', permissions: [{ service: 'user-api', method: 'Permissions.All' }, { service: 'user-api', method: 'Casbin.GetPermissions' }, { service: 'user-api', method: 'Casbin.UpdatePermissions' }] }).then(response => {
+      // 循环全部同步前端权限到后台
+      permissions.forEach(permit => {
+        this.syncFrontPermit(permit)
+      })
+    },
+    syncFrontPermit(permit) {
+      UpdateOrCreate(permit).then(response => {
         const data = response.data
         if (data.valid) {
-          this.$message({
-            type: 'success',
-            message: '角色权限同步成功!'
+          this.$notify({
+            title: permit.name + '同步成功',
+            message: permit.name + '前端权限同步成功!',
+            type: 'success'
           })
         }
       })
-      console.log('123')
     },
     async logout() {
       await this.$store.dispatch('user/logout')

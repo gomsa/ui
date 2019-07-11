@@ -4,7 +4,7 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
-  avatar: '',
+  avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
   introduction: '',
   roles: []
 }
@@ -20,7 +20,9 @@ const mutations = {
     state.name = name
   },
   SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+    if (avatar !== undefined) {
+      state.avatar = avatar
+    }
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles

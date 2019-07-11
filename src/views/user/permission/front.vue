@@ -11,40 +11,45 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column :label="$t('microPermission.id')" prop="id" align="center" width="80">
+      <el-table-column :label="$t('frontPermit.id')" prop="id" align="center" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('microPermission.service')" prop="service" align="center" width="150">
+      <el-table-column :label="$t('frontPermit.app')" prop="service" align="center" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.app }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('frontPermit.service')" prop="service" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.service }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('microPermission.method')" prop="method" align="center" width="275">
+      <el-table-column :label="$t('frontPermit.method')" prop="method" align="center" width="275">
         <template slot-scope="scope">
           <span>{{ scope.row.method }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('microPermission.name')" prop="name" align="center" width="150">
+      <el-table-column :label="$t('frontPermit.name')" prop="name" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('microPermission.description')" prop="description" align="center" min-width="230">
+      <el-table-column :label="$t('frontPermit.description')" prop="description" align="center" min-width="230">
         <template slot-scope="scope">
           <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('microPermission.created_at')" prop="created_at" sortable="custom" align="center" width="180">
+      <el-table-column :label="$t('frontPermit.created_at')" prop="created_at" sortable="custom" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column :label="$t('microPermission.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <!-- <el-table-column :label="$t('frontPermit.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button size="mini" type="danger" @click="handleDeleted(row)">
-            {{ $t('microPermission.delete') }}
+            {{ $t('frontPermit.delete') }}
           </el-button>
         </template>
       </el-table-column> -->
@@ -54,25 +59,25 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('microPermission.service')" prop="service">
+        <el-form-item :label="$t('frontPermit.service')" prop="service">
           <el-input v-model="formData.service" />
         </el-form-item>
-        <el-form-item :label="$t('microPermission.method')" prop="method">
+        <el-form-item :label="$t('frontPermit.method')" prop="method">
           <el-input v-model="formData.method" />
         </el-form-item>
-        <el-form-item :label="$t('microPermission.name')" prop="name">
+        <el-form-item :label="$t('frontPermit.name')" prop="name">
           <el-input v-model="formData.name" />
         </el-form-item>
-        <el-form-item :label="$t('microPermission.description')" prop="description">
+        <el-form-item :label="$t('frontPermit.description')" prop="description">
           <el-input v-model="formData.description" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
-          {{ $t('microPermission.cancel') }}
+          {{ $t('frontPermit.cancel') }}
         </el-button>
         <el-button :disabled="dialogDisabled" type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          {{ $t('microPermission.confirm') }}
+          {{ $t('frontPermit.confirm') }}
         </el-button>
       </div>
     </el-dialog>
@@ -80,12 +85,12 @@
 </template>
 
 <script>
-import { List, Create, Delete, Update } from '@/api/permission'
+import { List, Create, Delete, Update } from '@/api/front-permit'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 export default {
-  name: 'PermissionList',
+  name: 'FrontPermitList',
   components: {
     Pagination
   },
@@ -159,7 +164,7 @@ export default {
     getList() {
       this.listLoading = true
       List(this.listQuery).then(response => {
-        this.list = response.data.permissions
+        this.list = response.data.frontPermits
         this.total = response.data.total
 
         // Just to simulate the time of the request
