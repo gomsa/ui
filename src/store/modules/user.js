@@ -6,7 +6,8 @@ const state = {
   name: '',
   avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
   introduction: '',
-  roles: []
+  roles: [],
+  front_permits: []
 }
 
 const mutations = {
@@ -26,6 +27,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_FRONT_PEIMITS: (state, front_permits) => {
+    state.front_permits = front_permits
   }
 }
 
@@ -60,9 +64,15 @@ const actions = {
         if ('roles' in data) {
           roles = data.roles
         }
+        let front_permits = []
+        if ('front_permits' in data) {
+          front_permits = data.front_permits
+        }
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_ROLES', roles)
+        commit('SET_FRONT_PEIMITS', front_permits)
         // commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
@@ -77,6 +87,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_FRONT_PEIMITS', [])
         removeToken()
         resetRouter()
         resolve()
@@ -91,6 +102,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_FRONT_PEIMITS', [])
       removeToken()
       resolve()
     })

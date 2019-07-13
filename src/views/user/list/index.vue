@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-waves class="filter-item" type="success" icon="el-icon-plus" @click="handleCreate">
+      <el-button v-permit="['ui_user_add']" v-waves class="filter-item" type="success" icon="el-icon-plus" @click="handleCreate">
         {{ $t('user.create') }}
       </el-button>
     </div>
@@ -54,13 +54,13 @@
       </el-table-column>
       <el-table-column :label="$t('user.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button size="mini" type="warning" @click="handleRole(row)">
+          <el-button v-permit="['ui_user_roles']" size="mini" type="warning" @click="handleRole(row)">
             {{ $t('user.role') }}
           </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button v-permit="['ui_user_update']" type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('user.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDeleted(row)">
+          <el-button v-permit="['ui_user_delete']" size="mini" type="danger" @click="handleDeleted(row)">
             {{ $t('user.delete') }}
           </el-button>
         </template>
@@ -324,7 +324,7 @@ export default {
     },
     // 获取用户角色
     getUserRoles(row) {
-      GetRoles({ userID: row.id }).then(response => {
+      GetRoles({ label: row.id }).then(response => {
         const roles = response.data.roles
         if (roles) {
           this.checkedRoles = roles
@@ -335,7 +335,7 @@ export default {
     updateUserRoles() {
       this.dialogDisabled = true
       UpdateRoles({
-        userID: this.userID,
+        label: this.userID,
         roles: this.checkedRoles
       }).then(response => {
         if (response.data.valid) {

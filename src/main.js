@@ -12,6 +12,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import directivePermission from './directive/permission/index.js' // 权限判断指令
 
 import i18n from './lang' // internationalization
 import './icons' // icon
@@ -44,6 +45,8 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+Vue.use(directivePermission)
 
 new Vue({
   el: '#app',

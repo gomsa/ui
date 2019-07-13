@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-waves class="filter-item" type="success" icon="el-icon-plus" @click="handleCreate">
+      <el-button v-permit="['ui_role_add']" v-waves class="filter-item" type="success" icon="el-icon-plus" @click="handleCreate">
         {{ $t('userRole.create') }}
       </el-button>
     </div>
@@ -42,16 +42,16 @@
       </el-table-column>
       <el-table-column :label="$t('userRole.actions')" align="center" width="350" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="success" size="mini" @click="handleFrontPermit(row)">
+          <el-button v-permit="['ui_role_front_permit']" type="success" size="mini" @click="handleFrontPermit(row)">
             {{ $t('userRole.front_permit') }}
           </el-button>
-          <el-button type="warning" size="mini" @click="handlePermission(row)">
+          <el-button v-permit="['ui_role_permission']" type="warning" size="mini" @click="handlePermission(row)">
             {{ $t('userRole.permission') }}
           </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button v-permit="['ui_role_update']" type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('userRole.edit') }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDeleted(row)">
+          <el-button v-permit="['ui_role_delete']" size="mini" type="danger" @click="handleDeleted(row)">
             {{ $t('userRole.delete') }}
           </el-button>
         </template>
@@ -90,7 +90,7 @@
         >
           <checkbox-indeterminate
             v-if="dialogFrontPermitVisible"
-            v-model="checkedPermissions"
+            v-model="checkedRoles"
             :options="item"
           />
         </el-form-item>
@@ -99,7 +99,7 @@
         <el-button @click="dialogFrontPermitVisible = false">
           {{ $t('userRole.cancel') }}
         </el-button>
-        <el-button :disabled="dialogDisabled" type="primary" @click="updateRolePermissions()">
+        <el-button :disabled="dialogDisabled" type="primary" @click="updateRoleFrontPermits()">
           {{ $t('userRole.confirm') }}
         </el-button>
       </div>
@@ -135,6 +135,7 @@ import { List, Create, Delete, Update } from '@/api/role'
 import { All as PermissionAll } from '@/api/permission'
 import { All as FrontPermitAll } from '@/api/front-permit'
 import { GetPermissions, UpdatePermissions } from '@/api/casbin'
+import { GetRoles, UpdateRoles } from '@/api/casbin'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 
@@ -153,6 +154,7 @@ export default {
       // 权限列表
       front_permits: {},
       permissions: {},
+      checkedRoles: [], // 前端权限角色  角色下面包含角色
       checkedPermissions: [],
       roleLabel: '', // 当前角色 label
       // 弹窗控制
@@ -219,12 +221,12 @@ export default {
           if (!this.front_permits[k]) {
             this.front_permits[k] = []
             this.front_permits[k].push({
-              label: data[key].app + '_' + data[key].service + '_' + data[key].method + '|',
+              label: data[key].app + '_' + data[key].service + '_' + data[key].method,
               name: data[key].name
             })
           } else {
             this.front_permits[k].push({
-              label: data[key].app + '_' + data[key].service + '_' + data[key].method + '|',
+              label: data[key].app + '_' + data[key].service + '_' + data[key].method,
               name: data[key].name
             })
           }
@@ -270,7 +272,7 @@ export default {
       })
     },
     // 获取角色权限
-    getRolePermission(row) {
+    getRolePermissions(row) {
       GetPermissions({ role: row.label }).then(response => {
         const perms = response.data.permissions
         if (perms) {
@@ -283,14 +285,40 @@ export default {
         }
       })
     },
+    // 获取角色权限角色  (角色下面还包含角色)
+    // 角色组(用户id userid 或者 前端权限分组)     权限分组    前端权限分组    访问服务方法 （一次包含关系）
+    // label,    root,     ui_user_add,  user-api,User.Add
+    getRoleRoles(row) {
+      GetRoles({ label: row.label }).then(response => {
+        const roles = response.data.roles
+        if (roles) {
+          this.checkedRoles = roles
+        }
+      })
+    },
     // 处理前端权限
     handleFrontPermit(row) {
       this.dialogFrontPermitVisible = true
       this.dialogDisabled = false
-      // 初始化权限列表防止冲突
-      this.checkedPermissions = []
-      this.getRolePermission(row)
+      // 初始化前端角色包括列表防止冲突
+      this.checkedRoles = []
+      this.getRoleRoles(row)
       this.roleLabel = row.label
+    },
+    updateRoleFrontPermits() {
+      this.dialogDisabled = true
+      UpdateRoles({
+        label: this.roleLabel, // 所属分组 这里是角色 而不是 用户
+        roles: this.checkedRoles
+      }).then(response => {
+        if (response.data.valid) {
+          this.dialogFrontPermitVisible = false
+          this.$message({
+            type: 'success',
+            message: '前端权限更新成功!'
+          })
+        }
+      })
     },
     // 更新角色权限
     updateRolePermissions() {
@@ -298,17 +326,9 @@ export default {
       const perms = []
       for (const key in checked) {
         const c = checked[key].split('|')
-        let service = ''
-        let method = ''
-        if (c[0] !== undefined) {
-          service = c[0]
-        }
-        if (c[1] !== undefined) {
-          method = c[1]
-        }
         perms.push({
-          service: service,
-          method: method
+          service: c[0],
+          method: c[1]
         })
       }
       this.dialogDisabled = true
@@ -317,7 +337,6 @@ export default {
         permissions: perms
       }).then(response => {
         if (response.data.valid) {
-          this.dialogFrontPermitVisible = false
           this.dialogPermissionVisible = false
           this.$message({
             type: 'success',
@@ -331,7 +350,7 @@ export default {
       this.dialogDisabled = false
       // 初始化权限列表防止冲突
       this.checkedPermissions = []
-      this.getRolePermission(row)
+      this.getRolePermissions(row)
       this.roleLabel = row.label
     },
     handleCreate() {
