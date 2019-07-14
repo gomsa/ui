@@ -28,13 +28,19 @@ const userRouter = {
       path: 'user/permission/front',
       component: () => import('@/views/user/permission/front'),
       name: 'FrontPermission',
-      meta: { title: 'FrontPermission' }
+      meta: {
+        title: 'FrontPermission',
+        permits: ['ui_front_permit_list']
+      }
     },
     {
       path: 'user/permission/micro',
       component: () => import('@/views/user/permission/micro'),
       name: 'MicroPermission',
-      meta: { title: 'MicroPermission' }
+      meta: {
+        title: 'MicroPermission',
+        permits: ['ui_micro_permit_list']
+      }
     }
   ]
 }
