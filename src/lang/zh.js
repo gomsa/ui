@@ -253,19 +253,24 @@ export default {
     cancel: '取消',
     confirm: '确定'
   },
-  department: {
+  goods: {
     create: '添加',
-    id: '权限ID',
-    app: '前端APP',
-    service: '服务',
-    method: '方法',
-    name: '权限名称',
-    description: '权限描述',
-    created_at: '创建时间',
     actions: '操作',
     edit: '编辑',
     delete: '删除',
     cancel: '取消',
-    confirm: '确定'
+    confirm: '确定',
+    code: '自编码(货号)',
+    name: '商品名称',
+    status: '商品状态',
+    barcodes: '商品条码',
+    brand: '商品品牌',
+    category: '商品分类',
+    department: '商品部门',
+    firm: '商品公司',
+    unspsc: '商品及服务编码',
+    taxcode: '税收分类编码',
+    updated_at: '权限描述',
+    created_at: '创建时间'
   }
 }
