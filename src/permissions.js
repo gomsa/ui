@@ -16,4 +16,5 @@ export default [
   { app: 'ui', service: 'front_permit', method: 'list', name: '前端权限列表', description: '查看所有前端权限分组', permissions: [{ service: 'user-api', method: 'FrontPermits.List' }] },
   // 微服务权限
   { app: 'ui', service: 'micro_permit', method: 'list', name: '微服务权限列表', description: '查看所有微服务权限分组', permissions: [{ service: 'user-api', method: 'Permissions.List' }] }
+
 ]

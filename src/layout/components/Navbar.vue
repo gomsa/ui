@@ -83,14 +83,14 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    syncFrontPermits() {
+    async syncFrontPermits() {
       // 循环全部同步前端权限到后台
-      permissions.forEach(permit => {
-        this.syncFrontPermit(permit)
-      })
+      for (const key in permissions) {
+        await this.syncFrontPermit(permissions[key])
+      }
     },
-    syncFrontPermit(permit) {
-      UpdateOrCreate(permit).then(response => {
+    async syncFrontPermit(permit) {
+      await UpdateOrCreate(permit).then(response => {
         const data = response.data
         if (data.valid) {
           this.$notify({

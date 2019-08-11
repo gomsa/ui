@@ -16,13 +16,19 @@ const userRouter = {
       path: 'user/list',
       component: () => import('@/views/user/list'),
       name: 'UserList',
-      meta: { title: 'UserList' }
+      meta: {
+        title: 'UserList',
+        permits: ['ui_user_list']
+      }
     },
     {
       path: 'user/role',
       component: () => import('@/views/user/role'),
       name: 'UserRole',
-      meta: { title: 'UserRole' }
+      meta: {
+        title: 'UserRole',
+        permits: ['ui_role_list']
+      }
     },
     {
       path: 'user/permission/front',

@@ -8,6 +8,15 @@ export default {
     MicroPermission: '微服务权限',
     FrontPermission: '前端权限',
 
+    Goods: '商品',
+    GoodsList: '商品列表',
+    GoodsBrand: '商品品牌',
+    GoodsCategory: '商品分类',
+    GoodsDepartment: '商品部门',
+    GoodsFirm: '商品公司',
+    GoodsTaxcode: '税收分类编码',
+    GoodsUnspsc: '国际服务编码',
+
     documentation: '文档',
     guide: '引导页',
     permission: '权限测试页',
@@ -230,6 +239,21 @@ export default {
     confirm: '确定'
   },
   frontPermit: {
+    create: '添加',
+    id: '权限ID',
+    app: '前端APP',
+    service: '服务',
+    method: '方法',
+    name: '权限名称',
+    description: '权限描述',
+    created_at: '创建时间',
+    actions: '操作',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取消',
+    confirm: '确定'
+  },
+  department: {
     create: '添加',
     id: '权限ID',
     app: '前端APP',
