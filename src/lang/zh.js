@@ -254,12 +254,7 @@ export default {
     confirm: '确定'
   },
   goods: {
-    create: '添加',
-    actions: '操作',
-    edit: '编辑',
-    delete: '删除',
-    cancel: '取消',
-    confirm: '确定',
+    id: '商品 ID',
     code: '自编码(货号)',
     name: '商品名称',
     status: '商品状态',
@@ -270,7 +265,25 @@ export default {
     firm: '商品公司',
     unspsc: '商品及服务编码',
     taxcode: '税收分类编码',
-    updated_at: '权限描述',
+    barcode: {
+      id: '条形码',
+      imgage: '图片',
+      price: '价格',
+      width: '宽(毫米)',
+      height: '高(毫米)',
+      depth: '深(毫米)',
+      unit: '单位',
+      spec: '规格',
+      grossweight: '总重(克)',
+      netweight: '净重(克)'
+    },
+    create: '添加',
+    actions: '操作',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取消',
+    confirm: '确定',
+    updated_at: '更新时间',
     created_at: '创建时间'
   }
 }

@@ -5,7 +5,7 @@ export function Exist(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.Exist',
+      'method': 'Goods.Exist',
       'request': data
     }
   })
@@ -16,7 +16,7 @@ export function List(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.List',
+      'method': 'Goods.List',
       'request': data
     }
   })
@@ -27,7 +27,7 @@ export function Get(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.Get',
+      'method': 'Goods.Get',
       'request': data
     }
   })
@@ -38,7 +38,7 @@ export function Create(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.Create',
+      'method': 'Goods.Create',
       'request': data
     }
   })
@@ -48,7 +48,7 @@ export function Update(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.Update',
+      'method': 'Goods.Update',
       'request': data
     }
   })
@@ -58,7 +58,7 @@ export function Delete(data) {
     method: 'post',
     data: {
       'service': 'goods-api',
-      'method': 'Goodss.Delete',
+      'method': 'Goods.Delete',
       'request': data
     }
   })

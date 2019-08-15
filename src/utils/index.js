@@ -348,3 +348,31 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+// 把克换算成对应单位
+export function parseWeight(weight, cunit) {
+  if (arguments.length === 0) {
+    return null
+  }
+  if (weight) {
+    var weight_str
+    const unit = cunit || '克'
+    switch (unit) {
+      case '千克':
+        weight = weight * 1000
+        break
+      case '吨':
+        weight = weight * 1000 * 1000
+        break
+    }
+    if (weight / 1000 > 1) {
+      if ((weight / 1000) / 1000 > 1) {
+        weight_str = weight + '吨'
+      } else {
+        weight_str = weight + '千克'
+      }
+    } else {
+      weight_str = weight + '克'
+    }
+    return weight_str
+  }
+}
