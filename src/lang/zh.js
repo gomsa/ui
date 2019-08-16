@@ -257,6 +257,9 @@ export default {
     id: '商品 ID',
     code: '自编码(货号)',
     name: '商品名称',
+    en_name: '英文名称',
+    description: '描述',
+    cess: '税率',
     status: '商品状态',
     barcodes: '商品条码',
     brand: '商品品牌',
@@ -267,7 +270,7 @@ export default {
     taxcode: '税收分类编码',
     barcode: {
       id: '条形码',
-      imgage: '图片',
+      images: '图片',
       price: '价格',
       width: '宽(毫米)',
       height: '高(毫米)',
