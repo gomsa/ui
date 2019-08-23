@@ -11,4 +11,4 @@ FROM nginx:alpine
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 WORKDIR /usr/share/nginx/html
-COPY --from=builder ./dist .
+COPY --from=builder /go/src/github.com/gomsa/ui/dist /usr/share/nginx/html
