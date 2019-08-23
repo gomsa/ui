@@ -348,31 +348,41 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
-// 把克换算成对应单位
-export function parseWeight(weight, cunit) {
-  if (arguments.length === 0) {
-    return null
-  }
-  if (weight) {
-    var weight_str
-    const unit = cunit || '克'
-    switch (unit) {
-      case '千克':
-        weight = weight * 1000
-        break
-      case '吨':
-        weight = weight * 1000 * 1000
-        break
-    }
-    if (weight / 1000 > 1) {
-      if ((weight / 1000) / 1000 > 1) {
-        weight_str = weight + '吨'
-      } else {
-        weight_str = weight + '千克'
+/**
+ * 转换成熟
+ * @param {*} datas
+ * @param {*} id
+ * @param {*} parent
+ */
+export function convertTree(datas, item) {
+  const tree = []
+  if (!item) {
+    datas.forEach(data => {
+      if (!data.parent) {
+        tree.push(data)
       }
-    } else {
-      weight_str = weight + '克'
+    })
+    // 第一层 children
+    tree.forEach(item => {
+      item = convertTree(datas, item)
+    })
+  } else {
+    // 赋值 children
+    datas.forEach(data => {
+      if (item.id === data.parent) {
+        // 创建 children
+        if (!item.hasOwnProperty('children')) {
+          item.children = []
+        }
+        item.children.push(data)
+      }
+    })
+    if ('children' in item) {
+    // 无限层 children
+      item.children.forEach(i => {
+        i = convertTree(datas, i)
+      })
     }
-    return weight_str
   }
+  return tree
 }

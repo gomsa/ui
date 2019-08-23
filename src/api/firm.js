@@ -1,76 +1,90 @@
 import request from '@/utils/request'
 
-export function Exist(good) {
+export function Exist(firm) {
   return request({
     method: 'post',
     data: {
       service: 'goods-api',
-      method: 'Goods.Exist',
+      method: 'Firms.Exist',
       request: {
-        good: good
+        firm: firm
+      }
+    }
+  })
+}
+export function All() {
+  return request({
+    method: 'post',
+    data: {
+      service: 'goods-api',
+      method: 'Firms.All',
+      request: {
+        firm: {}
       }
     }
   })
 }
 
-export function List(data) {
+export function List(firm) {
   return request({
     method: 'post',
     data: {
       service: 'goods-api',
-      method: 'Goods.List',
-      request: data
-    }
-  })
-}
-
-export function Get(good) {
-  return request({
-    method: 'post',
-    data: {
-      service: 'goods-api',
-      method: 'Goods.Get',
+      method: 'Firms.List',
       request: {
-        good: good
+        firm: firm
       }
     }
   })
 }
 
-export function Create(good) {
+export function Get(id) {
   return request({
     method: 'post',
     data: {
       service: 'goods-api',
-      method: 'Goods.Create',
+      method: 'Firms.Get',
       request: {
-        good: good
-      }
-    }
-  })
-}
-export function Update(good) {
-  return request({
-    method: 'post',
-    data: {
-      service: 'goods-api',
-      method: 'Goods.Update',
-      request: {
-        good: good
-      }
-    }
-  })
-}
-export function Delete(id) {
-  return request({
-    method: 'post',
-    data: {
-      service: 'goods-api',
-      method: 'Goods.Delete',
-      request: {
-        good: {
+        firm: {
           id: id
         }
+      }
+    }
+  })
+}
+
+export function Create(firm) {
+  return request({
+    method: 'post',
+    data: {
+      service: 'goods-api',
+      method: 'Firms.Create',
+      request: {
+        firm: firm
+      }
+    }
+  })
+}
+export function Update(firm) {
+  return request({
+    method: 'post',
+    data: {
+      service: 'goods-api',
+      method: 'Firms.Update',
+      request: {
+        firm: firm
+      }
+    }
+  })
+}
+export function Delete(firm) {
+  return request({
+    method: 'post',
+    data: {
+      service: 'goods-api',
+      method: 'Firms.Delete',
+      request: {
+        firm: firm
       }
     }
   })

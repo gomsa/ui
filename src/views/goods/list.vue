@@ -69,11 +69,11 @@
               align="center"
               width="180"
             />
-            <el-table-column
-              prop="price"
-              :label="$t('goods.barcode.price')"
-              align="center"
-            />
+            <el-table-column :label="$t('goods.barcode.price')" prop="price" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.price?scope.row.price/100:0 }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="width"
               :label="$t('goods.barcode.width')"
@@ -158,97 +158,12 @@
       :visible.sync="dialogFormVisible"
       width="80%"
     >
-
-      <el-input v-model="barcode.id" v-focus placeholder="请输入条形码" style="width:270px;margin-bottom: 1.2vh;" @keyup.enter.native="pullBarcode()">
-        <el-button slot="append" icon="el-icon-search" @click="pullBarcode()" />
-      </el-input>
-      <el-form ref="form" :model="form" class="form-expand" label-width="120px">
-        <el-form-item :label="$t('goods.code')">
-          <el-input v-model="form.code" @keyup.enter.native="pullOldData()">
-            <el-button slot="append" @click="pullOldData()">同步</el-button>
-          </el-input>
-        </el-form-item>
-        <el-form-item :label="$t('goods.name')">
-          <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item :label="$t('goods.en_name')">
-          <el-input v-model="form.en_name" />
-        </el-form-item>
-        <el-form-item :label="$t('goods.cess')">
-          <el-input-number v-model="form.cess" :precision="2" :step="0.01" :max="0.13" :min="0" />
-        </el-form-item>
-        <el-form-item :label="$t('goods.description')" style="width:100%">
-          <el-table
-            :data="form.barcodes"
-            style="width: 100%"
-            border
-            fit
-            highlight-current-row
-          >
-            <el-table-column :label="$t('goods.barcode.images')" prop="images" align="center">
-              <template slot-scope="scope">
-                <table-img
-                  v-if="scope.row.images"
-                  :images="scope.row.images"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.id')" prop="id" align="center" width="180">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.id" size="mini" :placeholder="$t('goods.barcode.id')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.price')" prop="price" align="center" width="150">
-              <template slot-scope="scope">
-                <el-input-number v-model="scope.row.price" size="mini" :precision="2" :step="0.01" :max="99999" :min="0" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.width')" prop="width" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.width" size="mini" :placeholder="$t('goods.barcode.width')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.height')" prop="height" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.height" size="mini" :placeholder="$t('goods.barcode.height')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.depth')" prop="depth" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.depth" size="mini" :placeholder="$t('goods.barcode.depth')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.unit')" prop="unit" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.unit" size="mini" :placeholder="$t('goods.barcode.unit')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.spec')" prop="spec" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.spec" size="mini" :placeholder="$t('goods.barcode.spec')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.grossweight')" prop="grossweight" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.grossweight" size="mini" :placeholder="$t('goods.barcode.grossweight')" />
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('goods.barcode.netweight')" prop="netweight" align="center">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.netweight" size="mini" :placeholder="$t('goods.barcode.netweight')" />
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-        <el-form-item :label="$t('goods.description')" style="width:100%">
-          <el-input v-model="form.description" type="textarea" />
-        </el-form-item>
-      </el-form>
+      <goods ref="goods" />
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button v-waves @click="dialogFormVisible = false">
           {{ $t('goods.cancel') }}
         </el-button>
-        <el-button :disabled="dialogDisabled" type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button v-waves :disabled="dialogDisabled" type="primary" @click="dialogStatus==='create'?createData():updateData()">
           {{ $t('goods.confirm') }}
         </el-button>
       </div>
@@ -256,26 +171,19 @@
   </div>
 </template>
 <script>
-import { List, Delete } from '@/api/goods'
-import { Get as BarcodeGet } from '@/api/barcode'
+import { List, Create, Delete } from '@/api/goods'
 import { parseTime } from '@/utils'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import TableImg from '@/components/TableImg'
-
+import Goods from '@/views/goods/goods.vue' // secondary package based on el-pagination
 export default {
   name: 'GoodsList',
   components: {
     Pagination,
-    TableImg
+    Goods
   },
   directives: {
-    waves,
-    focus: {
-      inserted: function(el) {
-        el.querySelector('input').focus()
-      }
-    }
+    waves
   },
   props: {},
   data() {
@@ -295,27 +203,6 @@ export default {
       textMap: {
         update: '编辑商品',
         create: '添加商品'
-      },
-      barcode: {
-        id: '',
-        price: 0,
-        width: 0,
-        height: 0,
-        depth: 0,
-        unit: '',
-        spec: '',
-        grossweight: 0,
-        netweight: 0,
-        images: []
-      },
-      form: {
-        code: '',
-        name: '',
-        en_name: '',
-        description: '',
-        cess: 0,
-        barcodes: [
-        ]
       }
     }
   },
@@ -358,11 +245,7 @@ export default {
       })
     },
     deleteData(id) {
-      Delete({
-        good: {
-          id: id
-        }
-      }).then(response => {
+      Delete(id).then(response => {
         const valid = response.data.valid
         if (valid) {
           this.getList()
@@ -382,64 +265,26 @@ export default {
       console.log('更新商品数据', row)
     },
     createData() {
-      console.log('创建商品数据', this.form)
-    },
-    pullBarcode() {
-      if (this.barcode) {
-        // 检测条码不存在新加
-        if (!this.isBarcode(this.barcode)) {
-          this.form.barcodes.push(JSON.parse(JSON.stringify(this.barcode)))
-        }
-        BarcodeGet(this.barcode.id).then(response => {
-          const goods = response.data.goods
-          if (goods) {
-            this.form.name = goods.name
-            this.form.en_name = goods.en_name
-            // 条码信息添加
-            this.handleBarcode(goods)
-          }
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '条形码为空,请输入条形码'
-        })
-      }
-    },
-    isBarcode(code) {
-      let valid = false
-      this.form.barcodes.forEach(barcode => {
-        if (barcode.id === code.id) {
-          valid = true
+      // 深拷贝防止数据出错
+      const goods = JSON.parse(JSON.stringify(this.$refs['goods'].form))
+      // 处理 barcode
+      goods.barcodes.forEach(barcode => {
+        // 先删除后赋值 防止数据类型错误
+        const images = JSON.stringify(barcode.images)
+        delete barcode.images
+        barcode.images = images
+        barcode.price = barcode.price * 100
+      })
+      // 添加商品
+      Create(goods).then(response => {
+        if (response.data.valid) {
+          this.$refs['goods'].initData()
+          this.$message({
+            type: 'success',
+            message: '商品添加成功'
+          })
         }
       })
-      return valid
-    },
-    // 处理条码
-    handleBarcode(goods) {
-      this.form.barcodes.forEach(barcode => {
-        if (barcode.id === goods.barcode) {
-          barcode.width = goods.width
-          barcode.height = goods.height
-          barcode.depth = goods.depth
-          barcode.unit = goods.unit
-          barcode.spec = goods.spec
-          barcode.grossweight = goods.grossweight
-          barcode.netweight = goods.netweight
-          barcode.images = goods.images
-        }
-      })
-    },
-    // 拉去老商品数据
-    pullOldData() {
-      if (this.form.code) {
-        console.log('拉取老数据', this.form.code)
-      } else {
-        this.$message({
-          type: 'error',
-          message: '自编码为空,请输入自编码'
-        })
-      }
     }
   }
 }
@@ -460,22 +305,6 @@ export default {
   .table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
-    width: 33.33%;
-  }
-  .form-expand {
-    display: -webkit-flex; /* Safari */
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    font-size: 0;
-  }
-  .form-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .form-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 1.2vh;
     width: 33.33%;
   }
 </style>
