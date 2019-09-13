@@ -55,3 +55,7 @@ new Vue({
   i18n,
   render: h => h(App)
 })
+
+const escpos = require('escpos')
+console.log('aaa')
+console.log(escpos)
