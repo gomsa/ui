@@ -6,7 +6,9 @@ export function UpdateOrCreate(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.UpdateOrCreate',
-      'request': data
+      'request': {
+        'front_permit': data
+      }
     }
   })
 }
@@ -28,7 +30,9 @@ export function List(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.List',
-      'request': data
+      'request': {
+        'list_query': data
+      }
     }
   })
 }
@@ -39,7 +43,9 @@ export function Get(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.Get',
-      'request': data
+      'request': {
+        'front_permit': data
+      }
     }
   })
 }
@@ -50,7 +56,9 @@ export function Create(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.Create',
-      'request': data
+      'request': {
+        'front_permit': data
+      }
     }
   })
 }
@@ -60,7 +68,9 @@ export function Update(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.Update',
-      'request': data
+      'request': {
+        'front_permit': data
+      }
     }
   })
 }
@@ -70,7 +80,9 @@ export function Delete(data) {
     data: {
       'service': 'user-api',
       'method': 'FrontPermits.Delete',
-      'request': data
+      'request': {
+        'front_permit': data
+      }
     }
   })
 }

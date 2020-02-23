@@ -6,7 +6,9 @@ export function login(data) {
     data: {
       'service': 'user-api',
       'method': 'Auth.Auth',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }

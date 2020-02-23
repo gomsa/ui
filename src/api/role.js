@@ -17,7 +17,9 @@ export function List(data) {
     data: {
       'service': 'user-api',
       'method': 'Roles.List',
-      'request': data
+      'request': {
+        'list_query': data
+      }
     }
   })
 }
@@ -28,7 +30,9 @@ export function Get(data) {
     data: {
       'service': 'user-api',
       'method': 'Roles.Get',
-      'request': data
+      'request': {
+        'role': data
+      }
     }
   })
 }
@@ -39,7 +43,9 @@ export function Create(data) {
     data: {
       'service': 'user-api',
       'method': 'Roles.Create',
-      'request': data
+      'request': {
+        'role': data
+      }
     }
   })
 }
@@ -49,7 +55,9 @@ export function Update(data) {
     data: {
       'service': 'user-api',
       'method': 'Roles.Update',
-      'request': data
+      'request': {
+        'role': data
+      }
     }
   })
 }
@@ -59,7 +67,9 @@ export function Delete(data) {
     data: {
       'service': 'user-api',
       'method': 'Roles.Delete',
-      'request': data
+      'request': {
+        'role': data
+      }
     }
   })
 }

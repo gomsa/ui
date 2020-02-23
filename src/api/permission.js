@@ -17,7 +17,9 @@ export function List(data) {
     data: {
       'service': 'user-api',
       'method': 'Permissions.List',
-      'request': data
+      'request': {
+        'list_query': data
+      }
     }
   })
 }
@@ -28,7 +30,9 @@ export function Get(data) {
     data: {
       'service': 'user-api',
       'method': 'Permissions.Get',
-      'request': data
+      'request': {
+        'permission': data
+      }
     }
   })
 }
@@ -39,7 +43,9 @@ export function Create(data) {
     data: {
       'service': 'user-api',
       'method': 'Permissions.Create',
-      'request': data
+      'request': {
+        'permission': data
+      }
     }
   })
 }
@@ -49,7 +55,9 @@ export function Update(data) {
     data: {
       'service': 'user-api',
       'method': 'Permissions.Update',
-      'request': data
+      'request': {
+        'permission': data
+      }
     }
   })
 }
@@ -59,7 +67,9 @@ export function Delete(data) {
     data: {
       'service': 'user-api',
       'method': 'Permissions.Delete',
-      'request': data
+      'request': {
+        'permission': data
+      }
     }
   })
 }

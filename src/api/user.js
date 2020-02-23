@@ -6,7 +6,9 @@ export function Exist(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.Exist',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }
@@ -17,7 +19,9 @@ export function List(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.List',
-      'request': data
+      'request': {
+        'list_query': data
+      }
     }
   })
 }
@@ -28,7 +32,9 @@ export function Get(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.Get',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }
@@ -39,7 +45,9 @@ export function Create(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.Create',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }
@@ -49,7 +57,9 @@ export function Update(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.Update',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }
@@ -59,7 +69,9 @@ export function Delete(data) {
     data: {
       'service': 'user-api',
       'method': 'Users.Delete',
-      'request': data
+      'request': {
+        'user': data
+      }
     }
   })
 }
